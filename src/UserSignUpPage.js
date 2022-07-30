@@ -9,32 +9,12 @@ class UserSignUpPage extends React.Component {
     rePassword: null,
   };
 
-  onChangeUserName = (event) => {
+  onChange = (event) => {
+    const value = event.target.value;
+    const field = event.target.name;
     this.setState({
-      username: event.target.value,
+      [field]: value,
     });
-    console.log(this.state);
-  };
-
-  onChangeDisplayName = (event) => {
-    this.setState({
-      displayName: event.target.value,
-    });
-    console.log(this.state);
-  };
-
-  onChangePassword = (event) => {
-    this.setState({
-      password: event.target.value,
-    });
-    console.log(this.state);
-  };
-
-  onChangeRePassword = (event) => {
-    this.setState({
-      rePassword: event.target.value,
-    });
-    console.log(this.state);
   };
 
   render() {
@@ -43,19 +23,27 @@ class UserSignUpPage extends React.Component {
         <h1>Sign Up</h1>
         <div>
           <label>Username</label>
-          <input onChange={this.onChangeUserName}></input>
+          <input name="username" onChange={this.onChange}></input>
         </div>
         <div>
           <label>Display Name</label>
-          <input onChange={this.onChangeDisplayName}></input>
+          <input name="displayName" onChange={this.onChange}></input>
         </div>
         <div>
           <label>Password</label>
-          <input type="password" onChange={this.onChangePassword}></input>
+          <input
+            name="password"
+            type="password"
+            onChange={this.onChange}
+          ></input>
         </div>
         <div>
           <label>Re-Password</label>
-          <input type="password" onChange={this.onChangeRePassword}></input>
+          <input
+            name="rePassword"
+            type="password"
+            onChange={this.onChange}
+          ></input>
         </div>
         <button>Sign Up</button>
       </form>
