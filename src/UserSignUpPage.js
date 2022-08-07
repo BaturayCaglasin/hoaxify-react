@@ -1,8 +1,10 @@
 import React from "react";
+import axios from "axios";
 
 class UserSignUpPage extends React.Component {
   //Appin son state'ini bize verecek olan fonksiyon. App'te, tarayıcıda console'da hali hazırda state kısmı bulunur.
   state = {
+    //key (label or field): value
     username: null,
     displayName: null,
     password: null,
@@ -10,11 +12,25 @@ class UserSignUpPage extends React.Component {
   };
 
   onChange = (event) => {
+    //onChange fonksiyonu. onChange bir event alacak parametre olarak.
+    const key = event.target.name;
     const value = event.target.value;
-    const field = event.target.name;
     this.setState({
-      [field]: value,
+      [key]: value,
     });
+  };
+
+  onClickSignUp = (event) => {
+    event.preventDefault();
+
+    const { username, displayName, password, rePassword } = this.state;
+    const body = {
+      username: username,
+      displayName: displayName,
+      password: password,
+      rePassword: rePassword,
+    };
+    axios.post("/api/1.0/users", body);
   };
 
   render() {
@@ -45,7 +61,7 @@ class UserSignUpPage extends React.Component {
             onChange={this.onChange}
           ></input>
         </div>
-        <button>Sign Up</button>
+        <button onClick={this.onClickSignUp}>Sign Up</button>
       </form>
     );
   }
