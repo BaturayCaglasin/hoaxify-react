@@ -10,18 +10,20 @@ class UserSignUpPage extends React.Component {
     password: null,
     rePassword: null,
     pendingApiCall: false,
+    errors: {},
   };
 
   onChange = (event) => {
-    //onChange fonksiyonu. onChange bir event alacak parametre olarak.
-    const key = event.target.name;
-    const value = event.target.value;
+    const { name, value } = event.target;
+    const errors = { ...this.state.errors };
+    errors[name] = undefined;
     this.setState({
-      [key]: value,
+      [name]: value,
+      errors,
     });
   };
 
-  onClickSignUp = (event) => {
+  onClickSignUp = async (event) => {
     event.preventDefault();
 
     const { username, displayName, password, rePassword } = this.state;
@@ -33,16 +35,24 @@ class UserSignUpPage extends React.Component {
     };
 
     this.setState({ pendingApiCall: true });
+
     signup(body)
       .then((response) => {
         this.setState({ pendingApiCall: false });
       })
       .catch((error) => {
+        if (error.response.data.validationErrors) {
+          this.setState({
+            errors: error.response.data.validationErrors,
+          });
+        }
         this.setState({ pendingApiCall: false });
       });
   };
 
   render() {
+    const { pendingApiCall, errors } = this.state;
+    const { username, displayName, password, rePassword } = errors;
     return (
       //Container: sağdan sola daha ortalı bir biçimde sayfayı düzenler.
       //text-center: text'i ortalar.
@@ -58,35 +68,43 @@ class UserSignUpPage extends React.Component {
             <label>Username</label>
             <input
               name="username"
-              class="form-control"
+              className={username ? "form-control is-invalid" : "form-control"}
               onChange={this.onChange}
             ></input>
+            <div className="invalid-feedback">{username}</div>
           </div>
           <div className="form-group">
             <label>Display Name</label>
             <input
               name="displayName"
-              class="form-control"
+              className={
+                displayName ? "form-control is-invalid" : "form-control"
+              }
               onChange={this.onChange}
             ></input>
+            <div className="invalid-feedback">{displayName}</div>
           </div>
           <div className="form-group">
             <label>Password</label>
             <input
               name="password"
               type="password"
-              className="form-control"
+              className={password ? "form-control is-invalid" : "form-control"}
               onChange={this.onChange}
             ></input>
+            <div className="invalid-feedback">{password}</div>
           </div>
           <div className="form-group">
             <label>Re-Password</label>
             <input
               name="rePassword"
               type="password"
-              className="form-control"
+              className={
+                rePassword ? "form-control is-invalid" : "form-control"
+              }
               onChange={this.onChange}
             ></input>
+            <div className="invalid-feedback">{rePassword}</div>
           </div>
           <div className="text-center">
             <button
