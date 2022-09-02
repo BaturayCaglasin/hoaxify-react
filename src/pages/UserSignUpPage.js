@@ -1,6 +1,7 @@
 import React from "react";
 import { signup } from "../api/apiCalls";
-
+import { withTranslation } from "react-i18next";
+import { changeLanguage } from "i18next";
 class UserSignUpPage extends React.Component {
   //Appin son state'ini bize verecek olan fonksiyon. App'te, tarayıcıda console'da hali hazırda state kısmı bulunur.
   state = {
@@ -14,6 +15,7 @@ class UserSignUpPage extends React.Component {
   };
 
   onChange = (event) => {
+    const { t } = this.props;
     const { name, value } = event.target;
     const errors = { ...this.state.errors };
     errors[name] = undefined;
@@ -50,6 +52,12 @@ class UserSignUpPage extends React.Component {
       });
   };
 
+  onChangeLanguage = (language) => {
+    const { i18n } = this.props;
+    i18n.changeLanguage(language);
+    changeLanguage(language); //axios'un genel dil ayarlarını değiştirir.
+  };
+
   render() {
     const { pendingApiCall, errors } = this.state;
     const { username, displayName, password, rePassword } = errors;
@@ -62,7 +70,7 @@ class UserSignUpPage extends React.Component {
       <div className="container">
         <form>
           <h1 className="text-center" text->
-            Sign Up
+            {this.props.t("Sign Up")}
           </h1>
           <div className="form-group">
             <label>Username</label>
@@ -120,10 +128,25 @@ class UserSignUpPage extends React.Component {
               Sign Up
             </button>
           </div>
+          <div>
+            <img
+              src="https://flagcdn.com/20x15/tr.png"
+              alt="Turkish Flag"
+              onClick={() => this.onChangeLanguage("tr")}
+            ></img>
+            <img
+              src="https://flagcdn.com/20x15/gb.png"
+              alt="United Kingdom Flag"
+              onClick={() => this.onChangeLanguage("gb")}
+            ></img>
+          </div>
         </form>
       </div>
     );
   }
 }
+//withTransaction() fonksiyonundan dönen başka bir fonksiyona UserSignUpPage parametresini verirsek;
+const UserSignUpPageWithTranslation = withTranslation()(UserSignUpPage);
 
-export default UserSignUpPage; //index.js'te kullanabilmek için. Her class'ın export edilmesi beklenir.
+//export default withTransaction()(UserSignUpPage); //index.js'te kullanabilmek için. Her class'ın export edilmesi beklenir.
+export default UserSignUpPageWithTranslation;
